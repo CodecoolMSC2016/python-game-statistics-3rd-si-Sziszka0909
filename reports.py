@@ -1,22 +1,54 @@
 
-# Export functions
+# Report functions
 
 
-import reports
+def count_games(file_name):
+    with open(file_name) as f:        
+        return sum(1 for sor in f)
 
-file_name = 'game_stat.txt'
-title = 'The Sims 3'
-total_copies_sold = '10'
-year = '2010'
-genre = 'Simulation'
-publisher = 'Microsoft'
+def decide(file_name, year):
+    with open((file_name), 'r') as f:
+        line_list = f.readlines()
+        exist = False
+    for k in range(len(line_list)):
+        line_list[k] = (line_list[k]).split('\t')
+    for l in range(len(line_list)):
+        if year == int(line_list[l][2]):
+            return True
+    return False
 
-line0 = "Number of games: %s" % (reports.count_games(file_name))
-line1 = "Is there a game from %s?: %s" %(year, reports.decide(file_name, year))
-line2 = "%s is the latest game on the list." % (reports.get_latest(file_name))
-line3 = "There is %s game with the genre %s" % (reports.count_by_genre(file_name, genre), genre)
-line4 = "The %s game is in the %d-th line." % (title, reports.get_line_number_by_title(file_name, title))
-text_list = [line1, line2, line3, line4]
-with open("Judy's answers.txt", "w") as answertext:
-    for k in range(len(text_list)):
-        answertext.writelines(text_list[k]+"\n")
+
+def get_latest(file_name):
+    with open((file_name), 'r') as f:
+        line_list = f.readlines()
+    for k in range(len(line_list)):
+        line_list[k] = (line_list[k]).split('\t')
+    latest = 0
+    for l in range(len(line_list)):
+        if latest < int(line_list[l][2]):
+            latest = int(line_list[l][2])
+            latest_name = line_list[l][0]
+    return latest_name
+
+
+
+def count_by_genre(file_name, genre):
+    with open((file_name), 'r') as f:
+        line_list = f.readlines()
+    for k in range(len(line_list)):
+        line_list[k] = (line_list[k]).split('\t')
+    count = 0
+    for l in range(len(line_list)):
+        if genre == line_list[l][3]:
+            count += 1
+    return count
+
+
+
+def get_line_number_by_title(file_name, title):
+    with open((file_name), 'r') as f:
+            line_list = f.readlines()
+    for k in range(len(line_list)):
+        line_list[k] = (line_list[k]).split('\t')
+        if (title.lower()).replace(" ", "") == (line_list[k][0].lower()).replace(" ", ""):
+            return k+1
